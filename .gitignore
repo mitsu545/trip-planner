@@ -1,0 +1,15 @@
+# 依存・ビルド
+node_modules/
+dist/
+.firebase/
+
+# 秘密情報
+.env
+.env.*
+*.local
+firebase-debug.log
+
+# OS・エディタ
+.DS_Store
+Thumbs.db
+.vscode/

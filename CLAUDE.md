@@ -22,8 +22,10 @@
 - 何を作るか：夫婦2人で旅行の「回る順番・滞在時間・移動時間」を気軽に並べて、到着時刻とゆったり度が自動で出る計画アプリ。詳細は `docs/CONCEPT.md`
 - **絶対条件1：完全無料。クレジットカード登録が必要なサービス・APIキーが必要な外部APIは使わない**（Google Maps API も使わない。地図と経路は Googleマップ本体をリンクで開く）
 - **絶対条件2：入力はめっちゃ簡単。複雑さゼロ。** 迷ったら「機能を足す」より「タップ数を減らす」を選ぶ
-- 技術スタック：静的な Web アプリ（スマホ優先）＋ Firebase Sparkプラン（同時編集・カード不要）。フレームワークは `/build-app` の最初に決める（候補：Vite + React、または素の HTML/JS）
-- 起動コマンド：（未記入。実装開始時に記入）
-- 公開先：Firebase Hosting（Sparkプラン・無料）を第一候補。⚠️ GitHub Pages は非公開リポだと Free プランで使えない可能性があるため避ける
+- 技術スタック：**素の HTML/JS（ビルドなし）**＋ SortableJS（CDN）＋ Firebase Sparkプラン（同時編集・カード不要、CDN 読み込み）。Node.js は入っていないので Node 必須の道具は使わない
+- 起動コマンド：`python -m http.server 8123` → `http://127.0.0.1:8123/`
+- 公開先：**Cloudflare Pages**（GitHub 連携で自動公開・無料・カード不要）を第一候補。⚠️ GitHub Pages は非公開リポだと Free プランで使えない可能性があるため避ける
+- 進行状況（2026-09-17）：手順1「保存なし版」完了（`index.html` / `style.css` / `app.js`、localStorage 保存）。次は 手順2 本人の動作確認 → 手順3 Firebase で 2 人同時編集 → 手順4 Cloudflare Pages で公開
+- ⚠️未検証：ドラッグ並べ替え・候補箱⇄日程のドラッグ移動・日の追加削除（実機で確認待ち）
 - 実行環境：Windows
 - GitHub：`mitsu545/trip-planner`（private）

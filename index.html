@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>trip-planner</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="top">
+    <input id="tripName" class="trip-name" placeholder="旅の名前（例：秋の京都）" />
+  </header>
+
+  <!-- 日タブ -->
+  <nav id="dayTabs" class="day-tabs"></nav>
+
+  <!-- 1日の設定とゆったり度 -->
+  <section class="card">
+    <div class="row">
+      <label>出発 <input id="dayStart" type="time" /></label>
+      <label>出発地 <input id="dayOrigin" placeholder="宿" /></label>
+      <label>終了 <input id="dayEnd" type="time" /></label>
+    </div>
+    <div id="meter" class="meter"></div>
+  </section>
+
+  <!-- タイムライン -->
+  <section class="card">
+    <h2>📅 <span id="dayTitle">1日目</span> の予定</h2>
+    <ol id="timeline" class="timeline"></ol>
+    <p class="hint">候補箱から ↓↑ ドラッグ、または「＋」で追加</p>
+  </section>
+
+  <!-- 候補箱 -->
+  <section class="card">
+    <h2>📋 候補箱</h2>
+    <form id="addForm" class="add-form">
+      <input id="newName" placeholder="場所の名前" required />
+      <input id="newUrl" placeholder="GoogleマップのURL（任意）" inputmode="url" />
+      <button type="submit">追加</button>
+    </form>
+    <ul id="pool" class="pool"></ul>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

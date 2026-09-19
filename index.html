@@ -46,6 +46,21 @@
     <ul id="pool" class="pool"></ul>
   </section>
 
+  <!-- AIしおり -->
+  <section class="card">
+    <h2>📖 AIしおり</h2>
+    <p class="hint" style="margin:0 0 10px">今の旅程をAI（Gemini）に渡して、読みやすい「しおり」文章を作ります</p>
+    <div class="row">
+      <button id="shioriBtn" class="primary" type="button">🪄 しおりを作る</button>
+      <button id="shioriKeyBtn" type="button">🔑 キー変更</button>
+    </div>
+    <p id="shioriStatus" class="hint" style="display:none"></p>
+    <div id="shioriResult" class="shiori-result" hidden>
+      <pre id="shioriText"></pre>
+      <button id="shioriCopyBtn" type="button">📋 コピー</button>
+    </div>
+  </section>
+
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
   <script src="app.js"></script>
 </body>

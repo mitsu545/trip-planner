@@ -206,6 +206,80 @@ function renderPool() {
   });
 }
 
+// ---------- AIしおり（Gemini API・無料枠） ----------
+const GEMINI_KEY_STORAGE = "trip-planner-gemini-key";
+const GEMINI_MODEL = "gemini-2.5-flash";
+
+function getGeminiKey(forcePrompt) {
+  let key = localStorage.getItem(GEMINI_KEY_STORAGE) || "";
+  if (!key || forcePrompt) {
+    key = (prompt("Gemini APIキーを入力してください\n（Google AI Studioで無料取得・このブラウザにだけ保存されます）", key) || "").trim();
+    if (key) localStorage.setItem(GEMINI_KEY_STORAGE, key);
+  }
+  return key;
+}
+
+/** 旅程を「しおり」プロンプト用のテキストに変換 */
+function buildTripText() {
+  const lines = [`旅行名：${state.tripName || "（名前未設定）"}`];
+  state.days.forEach((day, di) => {
+    const c = calc(day);
+    lines.push(`\n■ ${di + 1}日目（${day.start}〜${day.end}、出発地：${day.origin}）`);
+    if (c.rows.length === 0) { lines.push("（予定なし）"); return; }
+    c.rows.forEach((r, i) => {
+      const place = state.places[r.placeId] || { name: "？" };
+      const nextName = c.rows[i + 1] ? (state.places[c.rows[i + 1].placeId] || {}).name : day.origin;
+      lines.push(`${fmt(r.arrive)} ${place.name}（滞在${fmtDur(r.stay)}・${fmt(r.depart)}出発）`);
+      lines.push(`  → ${MODES[r.mode]}${fmtDur(r.travel)} → ${nextName}`);
+    });
+    lines.push(`${fmt(c.end)} ${day.origin} に到着（ゆったり度：${c.verdict}）`);
+  });
+  return lines.join("\n");
+}
+
+async function generateShiori() {
+  const key = getGeminiKey();
+  if (!key) return;
+  const btn = $("shioriBtn"), status = $("shioriStatus"), box = $("shioriResult");
+  btn.disabled = true;
+  status.style.display = "block";
+  status.textContent = "🪄 しおりを作っています…";
+  box.hidden = true;
+  try {
+    const prompt_ = `以下は夫婦2人旅行の予定です。読んで楽しくなる、あたたかい「旅のしおり」の文章を日本語で書いてください。日ごとに見出しをつけ、訪問先を簡単に紹介しつつ時刻の流れがわかるように、絵文字は控えめに、長すぎない文章でお願いします。\n\n${buildTripText()}`;
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${encodeURIComponent(key)}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ contents: [{ parts: [{ text: prompt_ }] }] }),
+    });
+    if (res.status === 400 || res.status === 403) {
+      localStorage.removeItem(GEMINI_KEY_STORAGE);
+      throw new Error("APIキーが無効なようです。もう一度キーを入力してください");
+    }
+    if (!res.ok) throw new Error(`Geminiからエラーが返ってきました（${res.status}）`);
+    const data = await res.json();
+    const text = (data.candidates?.[0]?.content?.parts || []).map((p) => p.text).join("");
+    if (!text) throw new Error("しおりの文章が空でした。もう一度お試しください");
+    $("shioriText").textContent = text;
+    box.hidden = false;
+  } catch (err) {
+    alert(err.message || "しおりの作成に失敗しました");
+  } finally {
+    btn.disabled = false;
+    status.style.display = "none";
+  }
+}
+
+$("shioriBtn").onclick = generateShiori;
+$("shioriKeyBtn").onclick = () => getGeminiKey(true);
+$("shioriCopyBtn").onclick = () => {
+  navigator.clipboard.writeText($("shioriText").textContent).then(() => {
+    const b = $("shioriCopyBtn");
+    b.textContent = "✅ コピーしました";
+    setTimeout(() => { b.textContent = "📋 コピー"; }, 1500);
+  });
+};
+
 // ---------- 操作 ----------
 function addToDay(pid, index) {
   const day = state.days[state.current];

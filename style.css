@@ -1,92 +1,141 @@
 :root {
-  --bg: #f6f4ef;
-  --card: #fff;
-  --ink: #222;
-  --sub: #777;
-  --line: #e6e2d8;
-  --accent: #e07a3f;
-  --stay: #7fb77e;
-  --travel: #b8b8b8;
-  --warn: #d64545;
+  --bg-top: #eef7f6;
+  --bg-bottom: #fdf7ec;
+  --card: #ffffff;
+  --ink: #263238;
+  --sub: #7c8a90;
+  --line: #e7e0d2;
+  --accent: #ff7a59;      /* 夕焼けのサンゴ色：主役ボタン・リンク */
+  --accent-ink: #ffffff;
+  --sea: #2f9e97;         /* 海のティール：日タブ・見出しの差し色 */
+  --sea-ink: #ffffff;
+  --stay: #f4b942;        /* 滞在＝陽だまりの黄色 */
+  --travel: #8fb4c9;      /* 移動＝空の水色 */
+  --warn: #e5484d;
+  --shadow: 0 4px 14px rgba(38, 55, 61, .08);
 }
 * { box-sizing: border-box; }
 body {
-  margin: 0; padding: 0 0 40px;
-  background: var(--bg); color: var(--ink);
-  font: 16px/1.5 system-ui, -apple-system, "Hiragino Sans", sans-serif;
+  margin: 0; padding: 0 0 48px;
+  min-height: 100vh;
+  background: linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 100%);
+  background-attachment: fixed;
+  color: var(--ink);
+  font: 16px/1.6 "Zen Maru Gothic", system-ui, -apple-system, "Hiragino Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
-.top { padding: 12px 16px 4px; }
+
+.top { padding: 18px 16px 6px; display: flex; align-items: center; gap: 10px; }
+.top::before { content: "✈️"; font-size: 24px; line-height: 1; }
 .trip-name {
-  width: 100%; border: none; background: transparent;
-  font-size: 22px; font-weight: 700; outline: none;
+  flex: 1; width: 100%; border: none; background: transparent;
+  font-size: 22px; font-weight: 700; outline: none; color: var(--ink);
+  font-family: inherit;
 }
-h2 { font-size: 16px; margin: 0 0 8px; }
+.trip-name::placeholder { color: #b7ada1; }
+
+h2 { font-size: 16px; margin: 0 0 10px; font-weight: 700; letter-spacing: .02em; }
+
 .card {
-  background: var(--card); margin: 10px 12px; padding: 12px;
-  border-radius: 14px; box-shadow: 0 1px 3px rgba(0,0,0,.06);
+  background: var(--card); margin: 12px; padding: 14px;
+  border-radius: 18px; box-shadow: var(--shadow);
+  border: 1px solid rgba(38,55,61,.04);
 }
+
 input, select, button {
-  font: inherit; border: 1px solid var(--line); border-radius: 8px;
-  padding: 6px 8px; background: #fff; color: var(--ink);
+  font: inherit; border: 1px solid var(--line); border-radius: 10px;
+  padding: 8px 10px; background: #fff; color: var(--ink);
+  min-height: 40px;
 }
-button { cursor: pointer; }
-button.primary, .add-form button { background: var(--accent); color: #fff; border-color: var(--accent); }
+select { cursor: pointer; }
+button { cursor: pointer; transition: transform .08s ease, opacity .15s ease; }
+button:active { transform: scale(.96); }
+button.primary, .add-form button {
+  background: var(--accent); color: var(--accent-ink); border-color: var(--accent);
+  font-weight: 700;
+}
 .row { display: flex; gap: 8px; flex-wrap: wrap; }
-.row label { display: flex; flex-direction: column; font-size: 12px; color: var(--sub); flex: 1; }
+.row label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--sub); flex: 1; font-weight: 600; }
 .row input { width: 100%; }
-.hint { color: var(--sub); font-size: 12px; margin: 8px 0 0; text-align: center; }
+.hint { color: var(--sub); font-size: 12px; margin: 10px 0 0; text-align: center; }
 
 /* 日タブ */
-.day-tabs { display: flex; gap: 6px; padding: 6px 12px; overflow-x: auto; }
-.day-tabs button { white-space: nowrap; border-radius: 999px; padding: 6px 14px; }
-.day-tabs button.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+.day-tabs { display: flex; gap: 8px; padding: 4px 12px 10px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.day-tabs button {
+  white-space: nowrap; border-radius: 999px; padding: 8px 16px;
+  background: #fff; font-weight: 700; color: var(--sub); border-color: var(--line);
+}
+.day-tabs button.active { background: var(--sea); color: var(--sea-ink); border-color: var(--sea); box-shadow: var(--shadow); }
 
 /* ゆったり度メーター */
-.meter { margin-top: 10px; }
+.meter { margin-top: 12px; }
 .meter .bar {
-  display: flex; height: 14px; border-radius: 7px; overflow: hidden;
-  background: #fff; border: 1px solid var(--line);
+  display: flex; height: 16px; border-radius: 999px; overflow: hidden;
+  background: #f1efe8; border: 1px solid var(--line);
 }
 .meter .bar .stay { background: var(--stay); }
 .meter .bar .travel { background: var(--travel); }
 .meter .bar .over { background: var(--warn); }
-.meter .sum { display: flex; justify-content: space-between; font-size: 13px; margin-top: 4px; }
-.meter .verdict { font-size: 18px; font-weight: 700; }
-.meter .verdict.warn { color: var(--warn); }
+.meter .sum { display: flex; justify-content: space-between; align-items: center; font-size: 13px; margin-top: 8px; flex-wrap: wrap; gap: 6px; color: var(--sub); }
+.meter .verdict {
+  font-size: 15px; font-weight: 700; color: var(--ink);
+  background: #f1efe8; padding: 3px 12px; border-radius: 999px;
+}
+.meter .verdict.warn { color: #fff; background: var(--warn); }
 
 /* タイムライン */
-.timeline { list-style: none; margin: 0; padding: 0; min-height: 60px; }
+.timeline { list-style: none; margin: 0; padding: 0 0 0 4px; min-height: 60px; position: relative; }
 .item {
-  border: 1px solid var(--line); border-radius: 10px;
-  padding: 8px 10px; margin-bottom: 6px; background: #fff;
+  border: 1px solid var(--line); border-radius: 14px;
+  padding: 10px 12px; margin-bottom: 8px; background: #fff;
+  box-shadow: 0 1px 4px rgba(38,55,61,.05);
 }
-.item.origin { background: #faf8f2; }
-.item .head { display: flex; align-items: center; gap: 8px; }
-.item .time { font-variant-numeric: tabular-nums; font-weight: 700; min-width: 48px; }
-.item .name { flex: 1; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.item.origin { background: #faf5e9; border-style: dashed; box-shadow: none; }
+.item .head { display: flex; align-items: center; gap: 10px; }
+.item .time {
+  font-variant-numeric: tabular-nums; font-weight: 800; min-width: 52px;
+  color: var(--sea);
+}
+.item .name { flex: 1; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .item .name a { color: inherit; text-decoration: none; }
-.item .remove { border: none; background: none; color: var(--sub); font-size: 18px; padding: 0 4px; }
-.item .ctrl { display: flex; gap: 6px; align-items: center; margin-top: 6px; font-size: 13px; color: var(--sub); flex-wrap: wrap; }
-.item .ctrl select { padding: 4px 6px; font-size: 13px; }
-.item .warnmark { color: var(--warn); }
+.item .remove { border: none; background: none; color: var(--sub); font-size: 20px; padding: 0 4px; min-height: auto; }
+.item .ctrl { display: flex; gap: 8px; align-items: center; margin-top: 8px; font-size: 13px; color: var(--sub); flex-wrap: wrap; }
+.item .ctrl select { padding: 5px 8px; font-size: 13px; min-height: 32px; }
+.item .warnmark { color: var(--warn); font-weight: 700; }
 .leg {
-  display: flex; gap: 6px; align-items: center; margin: -2px 0 6px 12px;
+  display: flex; gap: 8px; align-items: center; margin: 0 0 8px 16px;
   font-size: 13px; color: var(--sub); flex-wrap: wrap;
+  border-left: 2px dotted var(--line); padding-left: 12px;
 }
-.leg .modes button { padding: 3px 7px; border-radius: 6px; }
-.leg .modes button.on { background: var(--ink); color: #fff; border-color: var(--ink); }
-.leg a { color: var(--accent); text-decoration: none; font-weight: 600; }
+.leg .modes { display: flex; gap: 4px; }
+.leg .modes button { padding: 4px 9px; border-radius: 8px; min-height: 32px; }
+.leg .modes button.on { background: var(--sea); color: #fff; border-color: var(--sea); }
+.leg select { min-height: 32px; padding: 4px 8px; font-size: 13px; }
+.leg a { color: var(--accent); text-decoration: none; font-weight: 700; }
 .sortable-ghost { opacity: .4; }
 
 /* 候補箱 */
-.add-form { display: grid; grid-template-columns: 1fr auto; gap: 6px; }
+.add-form { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
 .add-form #newUrl { grid-column: 1 / -1; }
-.pool { list-style: none; margin: 10px 0 0; padding: 0; min-height: 30px; }
+.pool { list-style: none; margin: 12px 0 0; padding: 0; min-height: 30px; }
 .pool li {
   display: flex; align-items: center; gap: 8px;
-  border: 1px dashed var(--line); border-radius: 10px;
-  padding: 8px 10px; margin-bottom: 6px; background: #fff;
+  border: 1px dashed var(--line); border-radius: 14px;
+  padding: 10px 12px; margin-bottom: 8px; background: #fdfcf9;
 }
-.pool .name { flex: 1; }
-.pool .add { border-radius: 999px; width: 32px; height: 32px; padding: 0; }
-.empty { color: var(--sub); font-size: 13px; text-align: center; padding: 8px; }
+.pool .name { flex: 1; font-weight: 600; }
+.pool .add {
+  border-radius: 999px; width: 36px; height: 36px; padding: 0;
+  min-height: auto; font-size: 18px;
+}
+.empty { color: var(--sub); font-size: 13px; text-align: center; padding: 12px; }
+
+/* AIしおり */
+.shiori-result {
+  margin-top: 12px; background: #faf8f2; border: 1px solid var(--line);
+  border-radius: 14px; padding: 12px;
+}
+.shiori-result pre {
+  margin: 0 0 10px; white-space: pre-wrap; word-break: break-word;
+  font-family: inherit; font-size: 14px; line-height: 1.8;
+}
